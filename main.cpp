@@ -1,6 +1,5 @@
-namespace std {
-	extern "C" int printf(const char* format, ...);
-}
+#include <emscripten.h>
+#include <cstdio>
 
 int main(void) {
 	std::printf("void\n");
