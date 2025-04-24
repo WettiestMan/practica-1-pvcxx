@@ -4,8 +4,9 @@
 #include <SDL2/SDL.h>
 #include <string>
 #include <string_view>
+#include <utility>
 
-#include "include/WindowRenderer.hpp"
+#include "WindowRenderer.hpp"
 
 #include "Texturas.hpp"
 
@@ -23,16 +24,19 @@ public:
         JUGADOR_2 = WindowRenderer::ANCHO_DEFAULT - 50
     };
 
-    Jugador(std::string_view nombre);
+    Jugador(NumeroJugador jugador);
     void mover(Direccion dir) noexcept;
     void dibujar(SDL_Renderer* rend) const noexcept;
     SDL_Rect obtener_rectangulo() const noexcept;
+    Jugador::NumeroJugador obtener_numero_jugador() const noexcept;
+    static const char* convertir_jugador_a_string(NumeroJugador nj) noexcept;
 
 private:
     static constexpr float VELOCIDAD_DEFAULT = 5.0f;
     float velocidad;
-    std::string nombre;
     TexturaRect textura_rectangulo;
+    NumeroJugador numero_jugador;
+    static const std::pair<int, char*> jugador_str[2];
 };
 
 #endif // JUGADOR_HPP

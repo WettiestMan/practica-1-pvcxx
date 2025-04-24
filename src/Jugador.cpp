@@ -2,14 +2,19 @@
 #include "include/Texturas.hpp"
 #include "include/WindowRenderer.hpp"
 
-Jugador::Jugador(std::string_view nombre) : nombre(nombre), velocidad(VELOCIDAD_DEFAULT) {
+const std::pair<int, char*> Jugador::jugador_str[2] = {
+    {static_cast<int>(NumeroJugador::JUGADOR_1), "Jugador 1"},
+    {static_cast<int>(NumeroJugador::JUGADOR_2), "Jugador 2"}
+};
+
+Jugador::Jugador(NumeroJugador jugador) : numero_jugador(jugador), velocidad(VELOCIDAD_DEFAULT) {
     TexturaRect textura = Texturas::obtener_raqueta();
     if (textura.valido()) {
         textura_rectangulo.rectangulo = textura.rectangulo;
         textura_rectangulo.textura = textura.textura;
 
         textura_rectangulo.rectangulo.y = WindowRenderer::ALTO_DEFAULT / 2 - textura.rectangulo.h / 2;
-        textura_rectangulo.rectangulo.x = static_cast<int>(NumeroJugador::JUGADOR_1);
+        textura_rectangulo.rectangulo.x = static_cast<int>(numero_jugador);
     } else {
         throw std::runtime_error("No se pudo obtener la textura de la raqueta.");
     }
@@ -31,4 +36,20 @@ void Jugador::dibujar(SDL_Renderer* rend) const noexcept {
 
 SDL_Rect Jugador::obtener_rectangulo() const noexcept {
     return textura_rectangulo.rectangulo;
+}
+
+Jugador::NumeroJugador Jugador::obtener_numero_jugador() const noexcept {
+    return numero_jugador;
+}
+
+const char* Jugador::convertir_jugador_a_string(NumeroJugador nj) noexcept {
+    const char* str = nullptr;
+    for (const auto& par : jugador_str) {
+        if (par.first == static_cast<int>(nj)) {
+            str = par.second;
+            break;
+        }
+    }
+
+    return str;
 }

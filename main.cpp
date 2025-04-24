@@ -5,6 +5,9 @@
 
 #include "include/WindowRenderer.hpp"
 #include "include/texturas.hpp"
+#include "include/Bola.hpp"
+#include "include/Jugador.hpp"
+#include "include/Juego.hpp"
 
 int main(void) {
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -22,6 +25,25 @@ int main(void) {
 
 	if (Texturas::iniciar(tal_vez_display->renderer) != Texturas::OK) {
 		std::cerr << "No se pudieron crear las texturas: " << SDL_GetError() << std::endl;
+		WindowRenderer::cerrar(tal_vez_display.value());
+		SDL_Quit();
+		return 1;
+	}
+
+	try {
+		ContextoJuego ctx = {
+			tal_vez_display.value(),
+			Bola(),
+			Jugador(Jugador::NumeroJugador::JUGADOR_1),
+			Jugador(Jugador::NumeroJugador::JUGADOR_2),
+			nullptr
+		};
+
+		emscripten_set_main_loop_arg(game_loop, &ctx, 0, true);
+    }
+	catch (const std::runtime_error& e) {
+		std::cerr << "Error al crear el contexto del juego: " << e.what() << std::endl;
+		Texturas::cerrar();
 		WindowRenderer::cerrar(tal_vez_display.value());
 		SDL_Quit();
 		return 1;
