@@ -47,7 +47,7 @@ public:
     {
         vx = -vx;
     }
-    const SDL_Rect &getRect() const
+    const SDL_Rect &getRect()
     {
         return rect;
     }

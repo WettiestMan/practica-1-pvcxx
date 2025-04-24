@@ -15,7 +15,7 @@ Blocks* blocks = nullptr;
 
 void loop() {
     SDL_Event e;
-    while (SDL_PollEvent(&e)) 
+    while (SDL_PollEvent(&e))
     if (e.type == SDL_QUIT) { 
         SDL_Quit(); 
         return; 
@@ -45,7 +45,6 @@ int main() {
     window = SDL_CreateWindow("Minimal Breakout", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, Consts::WINDOW_WIDTH, Consts::WINDOW_HEIGHT, 0);
     renderer = SDL_CreateRenderer(window, -1, 0);
 
-    // instanciación
     ball   = new Ball(renderer);
     ball->center();
     ball->startMovement();
@@ -53,7 +52,7 @@ int main() {
     paddle = new Paddle(renderer);
     paddle->center();
 
-    blocks = new Blocks(renderer, 5, 10); // 5 filas, 10 columnas
+    blocks = new Blocks(renderer, 5, 10);
 
     emscripten_set_main_loop(loop, 0, 1);
     return 0;
