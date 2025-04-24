@@ -7,6 +7,16 @@ set(CMAKE_EXECUTABLE_SUFFIX ".html")
 add_library(target_cxx_flags INTERFACE)
 target_compile_features(target_cxx_flags INTERFACE cxx_std_23)
 
-add_executable(practica_1_pvcxx main.cpp src/texturas.cpp)
+# Si find_package no encuentra SDL2, puede que emscripten no lo haya descargado,
+# prueba a compilar un trabajo cualquiera de emscrpiten con "-s USE_SDL=2" para
+# que lo descarge y así CMake pueda encontrarlo.
+find_package(SDL2 CONFIG REQUIRED)
 
-target_compile_options(practica_1_pvcxx PRIVATE -s USE_SDL=2)
+add_executable(practica_1_pvcxx
+    main.cpp
+    src/texturas.cpp
+    src/Jugador.cpp
+    src/WindowRenderer.cpp
+)
+
+target_link_libraries(practica_1_pvcxx PRIVATE ${SDL2_LIBRARIES})

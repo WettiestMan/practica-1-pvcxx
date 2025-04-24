@@ -1,6 +1,8 @@
-#include "include/texturas.hpp"
 #include <stdexcept>
 #include <SDL2/SDL.h>
+#include <string>
+
+#include "include/texturas.hpp"
 
 SDL_Texture* Texturas::raqueta = nullptr;
 SDL_Texture* Texturas::bola = nullptr;
@@ -8,8 +10,12 @@ SDL_Texture* Texturas::segmento_linea_divisora = nullptr;
 
 bool Texturas::iniciado = false;
 
-bool Texturas::iniciar(SDL_Renderer* rend) {
-    if (rend == nullptr) return false;
+bool TexturaRect::valido(const TexturaRect& txr) noexcept {
+    return txr.textura != nullptr;
+}
+
+Texturas::ErrorInicializacion Texturas::iniciar(SDL_Renderer* rend) {
+    if (rend == nullptr) return ERROR_RENDERER_ES_NULL;
 
     auto prev_rend_target = SDL_GetRenderTarget(rend);
     raqueta = SDL_CreateTexture(rend, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_TARGET,
@@ -22,62 +28,40 @@ bool Texturas::iniciar(SDL_Renderer* rend) {
     if (raqueta != nullptr && bola != nullptr && segmento_linea_divisora != nullptr) {
         if (SDL_SetRenderTarget(rend, raqueta) == 0 &&
             SDL_SetRenderDrawColor(rend, 255, 255, 255, 255) == 0 &&
+            SDL_RenderFillRect(rend, nullptr) == 0 &&
+            SDL_SetRenderTarget(rend, bola) == 0 &&
+            SDL_SetRenderDrawColor(rend, 255, 255, 255, 255) == 0 &&
+            SDL_RenderFillRect(rend, nullptr) == 0 &&
+            SDL_SetRenderTarget(rend, segmento_linea_divisora) == 0 &&
+            SDL_SetRenderDrawColor(rend, 255, 255, 255, 255) == 0 &&
             SDL_RenderFillRect(rend, nullptr) == 0) {
 
-            if (SDL_SetRenderTarget(rend, bola) == 0 &&
-                SDL_SetRenderDrawColor(rend, 255, 255, 255, 255) == 0 &&
-                SDL_RenderFillRect(rend, nullptr) == 0) {
-
-                if (SDL_SetRenderTarget(rend, segmento_linea_divisora) == 0 &&
-                    SDL_SetRenderDrawColor(rend, 255, 255, 255, 255) == 0 &&
-                    SDL_RenderFillRect(rend, nullptr) == 0) {
-
-                    iniciado = true;
-                }
-            }
+            iniciado = true;
         }
 
-        // En general, tu no quieres tirar excepciones al momento de escribir videojuegos (a menos que uses Java o C#, supongo)
-        // porque en general es muy costoso en rendimiento. En este caso, sin embargo, decidí hacerlo
-        // porque no poder restaurar el render target es un error de ejecución grave.
-        // es probable que haya mejores maneras de manejarlo, pero esto es lo que se me ocurrió.
-        // (también tuve que descartar "noexcept" aquí :( )
-        //
-        // No te preocupes por los recursos, esta función llama Texturas::cerrar() para liberarlos
         if (SDL_SetRenderTarget(rend, prev_rend_target)) {
             cerrar();
-            using namespace std::string_literals;
-            throw std::runtime_error("Error al restaurar el render target: "s + SDL_GetError());
+            return ERROR_RESTAURAR_TARGET;
         }
     }
-    else {
-        if (raqueta != nullptr) {
-            SDL_DestroyTexture(raqueta);
-            raqueta = nullptr;
-        }
-        if (bola != nullptr) {
-            SDL_DestroyTexture(bola);
-            bola = nullptr;
-        }
-        if (segmento_linea_divisora != nullptr) {
-            SDL_DestroyTexture(segmento_linea_divisora);
-            segmento_linea_divisora = nullptr;
-        }
+
+    if (!iniciado) {
+        cerrar();
     }
     
-    return iniciado;
+    return iniciado ? OK : ERROR_CREACION_TEX;
 }
 
-SDL_Texture* Texturas::obtener_raqueta() noexcept {
-    return iniciado ? raqueta : nullptr;
+TexturaRect Texturas::obtener_raqueta() noexcept {
+    return {raqueta, rect_raqueta};
 }
 
-SDL_Texture* Texturas::obtener_bola() noexcept {
-    return iniciado ? bola : nullptr;
+TexturaRect Texturas::obtener_bola() noexcept {
+    return {bola, rect_bola};
 }
 
-SDL_Texture* Texturas::obtener_segmento_linea_divisora() noexcept {
-    return iniciado ? segmento_linea_divisora : nullptr;
+TexturaRect Texturas::obtener_segmento_linea_divisora() noexcept {
+    return {segmento_linea_divisora, rect_segmento_linea_divisora};
 }
 
 bool Texturas::esta_iniciado() noexcept {
