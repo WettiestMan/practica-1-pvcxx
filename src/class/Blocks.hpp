@@ -3,6 +3,7 @@
 #include <vector>
 #include "../functions/Consts.hpp"
 #include "../functions/Utils.hpp"
+#include "Ball.hpp"
 
 class Blocks {
 public:

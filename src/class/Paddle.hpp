@@ -1,10 +1,12 @@
 #pragma once
 #include <SDL2/SDL.h>
 #include "../functions/Consts.hpp"
+#include "../functions/Utils.hpp"
+#include "Ball.hpp"
 
 class Paddle {
 public:
-    explicit Paddle(SDL_Renderer* r) : renderer(r) {
+    Paddle(SDL_Renderer* r) : renderer(r) {
         rect.w = Consts::PADDLE_W;
         rect.h = Consts::PADDLE_H;
     }
@@ -18,8 +20,11 @@ public:
         if (rect.x < 0) rect.x = 0;
         if (rect.x + rect.w > Consts::WINDOW_WIDTH) rect.x = Consts::WINDOW_WIDTH - rect.w;
     }
-    const SDL_Rect& getRect() const { 
-        return rect; 
+    void checkCollisions(Ball* ball) {
+        const auto& ballRect = ball->getRect();
+        if (Utils::checkCollision(ballRect, rect)) {
+            ball->reverseY();
+        }
     }
     void show() const {
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);

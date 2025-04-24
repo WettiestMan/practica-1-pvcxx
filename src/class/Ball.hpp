@@ -8,9 +8,8 @@
 class Ball
 {
 public:
-    explicit Ball(SDL_Renderer *r, Paddle *paddle) // Modificar constructor
-        : renderer(r), paddle(paddle)
-    { // Inicializar referencia al paddle
+    Ball(SDL_Renderer *r) : renderer(r)
+    {
         std::srand(static_cast<unsigned>(std::time(nullptr)));
         rect.w = rect.h = Consts::BALL_SIZE;
     }
@@ -29,20 +28,11 @@ public:
         rect.x += static_cast<int>(vx);
         rect.y += static_cast<int>(vy);
 
-        // Colisión con bordes
         if (rect.x <= 0 || rect.x + rect.w >= Consts::WINDOW_WIDTH)
             reverseX();
         if (rect.y <= 0)
             reverseY();
 
-        // Colisión con paddle
-        if (Utils::checkCollision(rect, paddle->getRect()))
-        {
-            reverseY();
-            rect.y = paddle->getRect().y - rect.h; // Ajuste de posición
-        }
-
-        // Colisión con el fondo (reinicio)
         if (rect.y + rect.h >= Consts::WINDOW_HEIGHT)
         {
             center();
@@ -69,7 +59,6 @@ public:
 
 private:
     SDL_Renderer *renderer;
-    Paddle* paddle;
     SDL_Rect rect{};
     float vx = 0, vy = 0;
 };

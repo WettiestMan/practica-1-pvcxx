@@ -15,20 +15,27 @@ Blocks* blocks = nullptr;
 
 void loop() {
     SDL_Event e;
-    while (SDL_PollEvent(&e))
-        if (e.type == SDL_QUIT) { SDL_Quit(); return; }
+    while (SDL_PollEvent(&e)) 
+    if (e.type == SDL_QUIT) { 
+        SDL_Quit(); 
+        return; 
+    }
 
     const Uint8* keys = SDL_GetKeyboardState(nullptr);
-    paddle->handleInput(keys);
+
     ball->update();
+    paddle->handleInput(keys);
+    paddle->checkCollisions(ball);
     blocks->checkCollisions(ball);
+
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
 
+    
+    ball->show();
     blocks->show();
     paddle->show();
-    ball->show();
 
     SDL_RenderPresent(renderer);
 }
@@ -39,12 +46,12 @@ int main() {
     renderer = SDL_CreateRenderer(window, -1, 0);
 
     // instanciación
-    paddle = new Paddle(renderer);
-    paddle->center();
-
-    ball   = new Ball(renderer, paddle);
+    ball   = new Ball(renderer);
     ball->center();
     ball->startMovement();
+
+    paddle = new Paddle(renderer);
+    paddle->center();
 
     blocks = new Blocks(renderer, 5, 10); // 5 filas, 10 columnas
 

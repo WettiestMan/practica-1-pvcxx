@@ -1,7 +1,7 @@
 #pragma once
 namespace Consts {
     constexpr int WINDOW_WIDTH  = 800;
-    constexpr int WINDOW_HEIGHT = 600;
+    constexpr int WINDOW_HEIGHT = 500;
 
     constexpr int PADDLE_W = 100;
     constexpr int PADDLE_H = 20;
