@@ -12,12 +12,20 @@
 class Jugador
 {
 public:
-    enum class Direccion { ARRIBA = -1, ABAJO = 1};
-    enum class NumeroJugador { JUGADOR_1 = 50 / 2, JUGADOR_2 = WindowRenderer::ANCHO_DEFAULT - 50 / 2};
+    enum class Direccion : int {
+        QUIETO = 0,
+        ARRIBA = -1,
+        ABAJO = 1
+    };
+
+    enum class NumeroJugador : int{
+        JUGADOR_1 = 0,
+        JUGADOR_2 = WindowRenderer::ANCHO_DEFAULT - 50
+    };
 
     Jugador(std::string_view nombre);
     void mover(Direccion dir) noexcept;
-    void dibujar(SDL_Renderer* rend) const;
+    void dibujar(SDL_Renderer* rend) const noexcept;
     SDL_Rect obtener_rectangulo() const noexcept;
 
 private:
@@ -25,7 +33,6 @@ private:
     float velocidad;
     std::string nombre;
     TexturaRect textura_rectangulo;
-    int posicion_y = 0;
 };
 
 #endif // JUGADOR_HPP
