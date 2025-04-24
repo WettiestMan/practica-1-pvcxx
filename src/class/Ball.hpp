@@ -7,8 +7,10 @@
 
 class Ball
 {
+private:
+    static constexpr float BALL_ACCEL_FACTOR = 1.1f;
 public:
-    explicit Ball(SDL_Renderer *r, Paddle *paddle) // Modificar constructor
+    explicit Ball(SDL_Renderer *r, const Paddle& paddle) // Modificar constructor
         : renderer(r), paddle(paddle)
     { // Inicializar referencia al paddle
         std::srand(static_cast<unsigned>(std::time(nullptr)));
@@ -24,7 +26,7 @@ public:
         vx = (std::rand() % 2 ? 1 : -1) * Consts::BALL_SPEED;
         vy = -Consts::BALL_SPEED;
     }
-    void update()
+    void update(bool& gameOver)
     {
         rect.x += static_cast<int>(vx);
         rect.y += static_cast<int>(vy);
@@ -36,15 +38,16 @@ public:
             reverseY();
 
         // Colisión con paddle
-        if (Utils::checkCollision(rect, paddle->getRect()))
+        if (Utils::checkCollision(rect, paddle.getRect()))
         {
             reverseY();
-            rect.y = paddle->getRect().y - rect.h; // Ajuste de posición
+            rect.y = paddle.getRect().y - rect.h; // Ajuste de posición
         }
 
         // Colisión con el fondo (reinicio)
         if (rect.y + rect.h >= Consts::WINDOW_HEIGHT)
         {
+            gameOver = true;
             center();
             startMovement();
         }
@@ -66,10 +69,15 @@ public:
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
         SDL_RenderFillRect(renderer, &rect);
     }
+    void speedUp() noexcept
+    {
+        vx *= BALL_ACCEL_FACTOR;
+        vy *= BALL_ACCEL_FACTOR;
+    }
 
 private:
     SDL_Renderer *renderer;
-    Paddle* paddle;
+    const Paddle& paddle;
     SDL_Rect rect{};
     float vx = 0, vy = 0;
 };

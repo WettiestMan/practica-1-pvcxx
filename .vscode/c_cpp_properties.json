@@ -4,12 +4,12 @@
       "name": "Win32",
       "includePath": [
         "${workspaceFolder}/",
-        "C:\\emsdk\\upstream\\lib\\clang\\21\\include",
-        "C:\\emsdk\\upstream\\emscripten\\cache\\sysroot\\include\\c++\\v1",
-        "C:\\emsdk\\upstream\\emscripten\\cache\\sysroot\\include"
+        "C:\\emsdk\\emsdk\\upstream\\lib\\clang\\21\\include",
+        "C:\\emsdk\\emsdk\\upstream\\emscripten\\cache\\sysroot\\include\\c++\\v1",
+        "C:\\emsdk\\emsdk\\upstream\\emscripten\\cache\\sysroot\\include"
       ],
       "defines": ["_DEBUG", "UNICODE", "_UNICODE"],
-      "compilerPath": "C:\\emsdk\\upstream\\emscripten\\em++.bat",
+      "compilerPath": "C:\\emsdk\\emsdk\\upstream\\emscripten\\em++.bat",
       "windowsSdkVersion": "10.0.26100.0",
       "cppStandard": "c++23",
       "intelliSenseMode": "windows-clang-x64",

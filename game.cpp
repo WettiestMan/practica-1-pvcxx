@@ -1,53 +1,74 @@
 #include <SDL2/SDL.h>
 #include <emscripten.h>
+#include <iostream>
+#include <cstdio>
 
 #include "src/functions/Consts.hpp"
 #include "src/class/Paddle.hpp"
 #include "src/class/Ball.hpp"
 #include "src/class/Blocks.hpp"
+#include "src/class/Context.hpp"
 
-SDL_Window*   window   = nullptr;
-SDL_Renderer* renderer = nullptr;
-
-Paddle* paddle = nullptr;
-Ball*   ball   = nullptr;
-Blocks* blocks = nullptr;
-
-void loop() {
+void loop(void* arg) {
+    auto ctx = static_cast<Context*>(arg);
     SDL_Event e;
     while (SDL_PollEvent(&e))
         if (e.type == SDL_QUIT) { SDL_Quit(); return; }
 
     const Uint8* keys = SDL_GetKeyboardState(nullptr);
-    paddle->handleInput(keys);
-    ball->update();
-    blocks->checkCollisions(ball);
 
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderClear(renderer);
+    ctx->paddle.handleInput(keys);
+    ctx->ball.update(ctx->gameOver);
 
-    blocks->show();
-    paddle->show();
-    ball->show();
+    if(!ctx->gameOver) {
+        ctx->blocks.checkCollisions(ctx->ball);
+        ctx->blocks.checkDoneAndSpeedUp(ctx->ball);
+    }
+    else {
+        char msg[100];
+        std::snprintf(msg, sizeof(msg), "¡Perdiste! Obtuviste %d puntos.", ctx->points);
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "ou", msg, ctx->window);
+        ctx->blocks.reset();
+        ctx->points = 0;
+        ctx->gameOver = false;
+    }
 
-    SDL_RenderPresent(renderer);
+    SDL_SetRenderDrawColor(ctx->renderer, 0, 0, 0, 255);
+    SDL_RenderClear(ctx->renderer);
+
+    ctx->blocks.show();
+    ctx->paddle.show();
+    ctx->ball.show();
+
+    SDL_RenderPresent(ctx->renderer);
 }
 
 int main() {
     SDL_Init(SDL_INIT_VIDEO);
-    window = SDL_CreateWindow("Minimal Breakout", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, Consts::WINDOW_WIDTH, Consts::WINDOW_HEIGHT, 0);
-    renderer = SDL_CreateRenderer(window, -1, 0);
+    auto window = SDL_CreateWindow("Really Minimal Breakout", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, Consts::WINDOW_WIDTH, Consts::WINDOW_HEIGHT, 0);
+    auto renderer = SDL_CreateRenderer(window, -1, 0);
+
+    if (!window || !renderer) {
+        std::cerr << "Error creando ventana o renderer: " << SDL_GetError() << std::endl;
+        if (window) SDL_DestroyWindow(window);
+        if (renderer) SDL_DestroyRenderer(renderer);
+        SDL_Quit();
+        return 1;
+    }
 
     // instanciación
-    paddle = new Paddle(renderer);
-    paddle->center();
+    Context ctx = { window,
+        renderer,
+        Paddle(renderer),
+        Ball(renderer, ctx.paddle),
+        Blocks(renderer, 5, 10, ctx.points), // 5 filas, 10 columnas
+        0
+    };
+    ctx.paddle.center();
 
-    ball   = new Ball(renderer, paddle);
-    ball->center();
-    ball->startMovement();
+    ctx.ball.center();
+    ctx.ball.startMovement();
 
-    blocks = new Blocks(renderer, 5, 10); // 5 filas, 10 columnas
-
-    emscripten_set_main_loop(loop, 0, 1);
+    emscripten_set_main_loop_arg(loop, &ctx, 0, 1);
     return 0;
 }

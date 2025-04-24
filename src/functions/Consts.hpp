@@ -8,7 +8,7 @@ namespace Consts {
     constexpr int PADDLE_SPEED = 6;
 
     constexpr int BALL_SIZE  = 12;
-    constexpr float BALL_SPEED = 3.0f;
+    constexpr float BALL_SPEED = 4.0f;
 
     constexpr int BLOCK_W = 60;
     constexpr int BLOCK_H = 20;
