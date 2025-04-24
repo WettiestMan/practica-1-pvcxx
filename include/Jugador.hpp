@@ -20,8 +20,8 @@ public:
     };
 
     enum class NumeroJugador : int{
-        JUGADOR_1 = 0,
-        JUGADOR_2 = WindowRenderer::ANCHO_DEFAULT - 50
+        JUGADOR_1 = 20,
+        JUGADOR_2 = WindowRenderer::ANCHO_DEFAULT - Texturas::ANCHO_TEX_RAQUETA - 20
     };
 
     Jugador(NumeroJugador jugador);

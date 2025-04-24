@@ -20,11 +20,9 @@ Jugador::Jugador(NumeroJugador jugador) : numero_jugador(jugador), velocidad(VEL
     } else {
         throw std::runtime_error("No se pudo obtener la textura de la raqueta.");
     }
-    std::cout << "Jugador creado: " << convertir_jugador_a_string(numero_jugador) << '\n';
 }
 
 void Jugador::mover(Direccion dir) noexcept {
-    std::cout << convertir_jugador_a_string(numero_jugador) << ". Posición: " << rectangulo.x << ", " << rectangulo.y;
     if (dir == Direccion::ARRIBA) {
         rectangulo.y -= velocidad;
     }
@@ -37,7 +35,6 @@ void Jugador::mover(Direccion dir) noexcept {
     } else if (rectangulo.y + rectangulo.h > WindowRenderer::ALTO_DEFAULT) {
         rectangulo.y = WindowRenderer::ALTO_DEFAULT - rectangulo.h;
     }
-    std::cout << " | Nueva posición: " << rectangulo.x << ", " << rectangulo.y << '\n';
 }
 
 void Jugador::dibujar(SDL_Renderer* rend) const noexcept {
@@ -65,6 +62,5 @@ const char* Jugador::convertir_jugador_a_string(NumeroJugador nj) noexcept {
 }
 
 void Jugador::reiniciar_y() noexcept {
-    std::cout << "Reiniciando posición del jugador: " << convertir_jugador_a_string(numero_jugador) << std::endl;
     rectangulo.y = WindowRenderer::ALTO_DEFAULT / 2 - rectangulo.h / 2;
 }

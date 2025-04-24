@@ -8,10 +8,11 @@ static void renderizar(ContextoJuego& contexto) noexcept;
 //static void dibujar_linea_divisora(SDL_Renderer* rend) noexcept;
 static void manejar_colisiones(ContextoJuego& contexto) noexcept;
 static void verificar_bola_fuera(ContextoJuego& contexto) noexcept;
+static void rebotar_bola_y_cambiar_golpeador(ContextoJuego& contexto, Jugador* j) noexcept;
 
 void game_loop(void* arg) noexcept {
-    auto contexto = *static_cast<ContextoJuego*>(arg);
-    auto renderer = contexto.display.renderer;
+    auto contexto = static_cast<ContextoJuego*>(arg);
+    auto renderer = contexto->display.renderer;
 
     SDL_Event evento;
     while (SDL_PollEvent(&evento)) {
@@ -23,22 +24,22 @@ void game_loop(void* arg) noexcept {
 
     const Uint8* teclas = SDL_GetKeyboardState(nullptr);
     if (teclas[SDL_SCANCODE_W]) {
-        contexto.jugador1.mover(Jugador::Direccion::ARRIBA);
+        contexto->jugador1.mover(Jugador::Direccion::ARRIBA);
     }
     if (teclas[SDL_SCANCODE_S]) {
-        contexto.jugador1.mover(Jugador::Direccion::ABAJO);
+        contexto->jugador1.mover(Jugador::Direccion::ABAJO);
     }
     if (teclas[SDL_SCANCODE_UP]) {
-        contexto.jugador2.mover(Jugador::Direccion::ARRIBA);
+        contexto->jugador2.mover(Jugador::Direccion::ARRIBA);
     }
     if (teclas[SDL_SCANCODE_DOWN]) {
-        contexto.jugador2.mover(Jugador::Direccion::ABAJO);
+        contexto->jugador2.mover(Jugador::Direccion::ABAJO);
     }
 
-    contexto.bola.actualizar();
-    manejar_colisiones(contexto);
-    verificar_bola_fuera(contexto);
-    renderizar(contexto);
+    contexto->bola.actualizar();
+    manejar_colisiones(*contexto);
+    verificar_bola_fuera(*contexto);
+    renderizar(*contexto);
 }
 
 static void renderizar(ContextoJuego& contexto) noexcept {
@@ -59,12 +60,10 @@ static void manejar_colisiones(ContextoJuego& contexto) noexcept {
     SDL_Rect rect_jugador1 = contexto.jugador1.obtener_rectangulo();
     SDL_Rect rect_jugador2 = contexto.jugador2.obtener_rectangulo();
 
-    if (SDL_HasIntersection(&rect_bola, &rect_jugador1)) {
-        contexto.bola.rebotar_horizontal();
-        contexto.golpeador = &contexto.jugador1;
-    } else if (SDL_HasIntersection(&rect_bola, &rect_jugador2)) {
-        contexto.bola.rebotar_horizontal();
-        contexto.golpeador = &contexto.jugador2;
+    if (revisar_colision(rect_bola, rect_jugador1)) {
+        rebotar_bola_y_cambiar_golpeador(contexto, &contexto.jugador1);
+    } else if (revisar_colision(rect_bola, rect_jugador2)) {
+        rebotar_bola_y_cambiar_golpeador(contexto, &contexto.jugador2);
     }
 }
 
@@ -84,4 +83,11 @@ static void verificar_bola_fuera(ContextoJuego& contexto) noexcept {
 
         reiniciar_juego(contexto);
     }
+}
+
+static void rebotar_bola_y_cambiar_golpeador(ContextoJuego& contexto, Jugador* j) noexcept {
+    contexto.bola.invertir_x();
+    contexto.golpeador = j;
+    contexto.bola.reposicionar_x(*j);
+    contexto.bola.aumentar_rebotes();
 }

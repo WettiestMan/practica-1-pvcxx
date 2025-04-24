@@ -22,6 +22,13 @@ struct TexturaRect
 class Texturas
 {
 public:
+    static constexpr int ANCHO_TEX_RAQUETA = 30;
+    static constexpr int ALTO_TEX_RAQUETA = 200;
+    static constexpr int ANCHO_TEX_BOLA = 15;
+    static constexpr int ALTO_TEX_BOLA = 15;
+    static constexpr int ANCHO_TEX_SEGMENTO_LINEA_DIVISORA = 10;
+    static constexpr int ALTO_TEX_SEGMENTO_LINEA_DIVISORA = 20;
+
     enum ErrorInicializacion
     {
         OK = 0,
@@ -49,9 +56,10 @@ private:
     static SDL_Texture* segmento_linea_divisora;
     static bool iniciado;
 
-    static constexpr SDL_Rect rect_raqueta = {0, 0, 50, 300};
-    static constexpr SDL_Rect rect_bola = {0, 0, 25, 25};
-    static constexpr SDL_Rect rect_segmento_linea_divisora = {0, 0, 10, 20};
+    static constexpr SDL_Rect rect_raqueta = {0, 0, ANCHO_TEX_RAQUETA, ALTO_TEX_RAQUETA};
+    static constexpr SDL_Rect rect_bola = {0, 0, ANCHO_TEX_BOLA, ANCHO_TEX_BOLA};
+    static constexpr SDL_Rect rect_segmento_linea_divisora = {0, 0, ANCHO_TEX_SEGMENTO_LINEA_DIVISORA,
+        ALTO_TEX_SEGMENTO_LINEA_DIVISORA};
 };
 
 #endif // TEXTURAS_HPP
