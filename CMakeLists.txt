@@ -14,11 +14,14 @@ find_package(SDL2 CONFIG REQUIRED)
 
 add_executable(practica_1_pvcxx
     main.cpp
+    src/Misc.cpp
     src/Juego.cpp
     src/Bola.cpp
     src/texturas.cpp
     src/Jugador.cpp
     src/WindowRenderer.cpp
 )
+
+target_include_directories(practica_1_pvcxx PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_link_libraries(practica_1_pvcxx PRIVATE ${SDL2_LIBRARIES})

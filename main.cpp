@@ -30,7 +30,7 @@ int main(void) {
 		return 1;
 	}
 
-	try {
+	//try {
 		ContextoJuego ctx = {
 			tal_vez_display.value(),
 			Bola(),
@@ -40,14 +40,14 @@ int main(void) {
 		};
 
 		emscripten_set_main_loop_arg(game_loop, &ctx, 0, true);
-    }
+    /*}
 	catch (const std::runtime_error& e) {
 		std::cerr << "Error al crear el contexto del juego: " << e.what() << std::endl;
 		Texturas::cerrar();
 		WindowRenderer::cerrar(tal_vez_display.value());
 		SDL_Quit();
 		return 1;
-	}
+	}*/
 
 	return 0;
 }

@@ -8,7 +8,7 @@
 
 #include "WindowRenderer.hpp"
 
-#include "Texturas.hpp"
+#include "texturas.hpp"
 
 class Jugador
 {
@@ -27,6 +27,7 @@ public:
     Jugador(NumeroJugador jugador);
     void mover(Direccion dir) noexcept;
     void dibujar(SDL_Renderer* rend) const noexcept;
+    void reiniciar_y() noexcept;
     SDL_Rect obtener_rectangulo() const noexcept;
     Jugador::NumeroJugador obtener_numero_jugador() const noexcept;
     static const char* convertir_jugador_a_string(NumeroJugador nj) noexcept;
@@ -35,8 +36,10 @@ private:
     static constexpr float VELOCIDAD_DEFAULT = 5.0f;
     float velocidad;
     TexturaRect textura_rectangulo;
+    SDL_Texture* textura;
+    SDL_Rect rectangulo;
     NumeroJugador numero_jugador;
-    static const std::pair<int, char*> jugador_str[2];
+    static const std::pair<int, const char*> jugador_str[2];
 };
 
 #endif // JUGADOR_HPP
