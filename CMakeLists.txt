@@ -14,6 +14,7 @@ find_package(SDL2 CONFIG REQUIRED)
 
 add_executable(practica_1_pvcxx
     main.cpp
+    src/Bola.cpp
     src/texturas.cpp
     src/Jugador.cpp
     src/WindowRenderer.cpp
