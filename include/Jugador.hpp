@@ -7,7 +7,7 @@
 
 #include "include/WindowRenderer.hpp"
 
-#include "texturas.hpp"
+#include "Texturas.hpp"
 
 class Jugador
 {

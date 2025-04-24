@@ -1,5 +1,5 @@
 #include "include/Jugador.hpp"
-#include "include/texturas.hpp"
+#include "include/Texturas.hpp"
 #include "include/WindowRenderer.hpp"
 
 Jugador::Jugador(std::string_view nombre) : nombre(nombre), velocidad(VELOCIDAD_DEFAULT) {

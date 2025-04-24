@@ -2,7 +2,7 @@
 #include <SDL2/SDL.h>
 #include <string>
 
-#include "include/texturas.hpp"
+#include "include/Texturas.hpp"
 
 SDL_Texture* Texturas::raqueta = nullptr;
 SDL_Texture* Texturas::bola = nullptr;
