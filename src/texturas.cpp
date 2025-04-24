@@ -10,8 +10,8 @@ SDL_Texture* Texturas::segmento_linea_divisora = nullptr;
 
 bool Texturas::iniciado = false;
 
-bool TexturaRect::valido(const TexturaRect& txr) noexcept {
-    return txr.textura != nullptr;
+bool TexturaRect::valido() const noexcept {
+    return textura != nullptr;
 }
 
 Texturas::ErrorInicializacion Texturas::iniciar(SDL_Renderer* rend) {

@@ -1,3 +1,6 @@
+#ifndef TEXTURAS_HPP
+#define TEXTURAS_HPP
+
 #include <SDL2/SDL.h>
 #include <optional>
 
@@ -13,7 +16,7 @@ struct TexturaRect
     SDL_Texture* textura;
     SDL_Rect rectangulo;
 
-    static bool valido(const TexturaRect& txr) noexcept;
+    bool valido() const noexcept;
 };
 
 class Texturas
@@ -50,3 +53,5 @@ private:
     static constexpr SDL_Rect rect_bola = {0, 0, 25, 25};
     static constexpr SDL_Rect rect_segmento_linea_divisora = {0, 0, 10, 20};
 };
+
+#endif // TEXTURAS_HPP

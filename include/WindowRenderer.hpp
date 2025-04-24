@@ -11,6 +11,9 @@ struct WindowRenderer
     SDL_Window* window = nullptr;
     SDL_Renderer* renderer = nullptr;
 
+    static constexpr int ANCHO_DEFAULT = 800;
+    static constexpr int ALTO_DEFAULT = 600;
+
     /**
      * @brief Genera una ventana y un renderer de SDL.
      * @param titulo Titulo de la ventana.

@@ -12,7 +12,8 @@ int main(void) {
 		return 1;
 	}
 
-	std::optional<WindowRenderer> tal_vez_display = WindowRenderer::iniciar("SDL2 Emscripten", 800, 600);
+	std::optional<WindowRenderer> tal_vez_display = WindowRenderer::iniciar("SDL2 Emscripten", 
+		WindowRenderer::ANCHO_DEFAULT, WindowRenderer::ALTO_DEFAULT);
 	if (!tal_vez_display) {
 		std::cerr << "No se pudieron crear la ventana y el renderer: " << SDL_GetError() << std::endl;
 		SDL_Quit();
