@@ -26,9 +26,12 @@ public:
             ball->reverseY();
         }
     }
-    void show() const {
+    void show() {
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
         SDL_RenderFillRect(renderer, &rect);
+    }
+    void reset() {
+        center();
     }
 private:
     SDL_Renderer* renderer;

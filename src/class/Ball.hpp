@@ -32,12 +32,6 @@ public:
             reverseX();
         if (rect.y <= 0)
             reverseY();
-
-        if (rect.y + rect.h >= Consts::WINDOW_HEIGHT)
-        {
-            center();
-            startMovement();
-        }
     }
     void reverseY()
     {
@@ -47,14 +41,23 @@ public:
     {
         vx = -vx;
     }
-    const SDL_Rect &getRect()
+    bool isOut() 
     {
-        return rect;
+        return rect.y + rect.h >= Consts::WINDOW_HEIGHT;
     }
-    void show() const
+    void show()
     {
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
         SDL_RenderFillRect(renderer, &rect);
+    }
+    void reset() 
+    {
+        center();
+        startMovement();
+    }
+    SDL_Rect &getRect()
+    {
+        return rect;
     }
 
 private:
